@@ -3,7 +3,9 @@ process.title = "opencode-relay";
 import { ClaudeAgentAdapter } from "./adapters/ClaudeAgentAdapter.js";
 import { ClaudeMcpAdapter } from "./adapters/ClaudeMcpAdapter.js";
 import { ClaudeSkillAdapter } from "./adapters/ClaudeSkillAdapter.js";
+import { GeminiAgentAdapter } from "./adapters/GeminiAgentAdapter.js";
 import { GeminiMcpAdapter } from "./adapters/GeminiMcpAdapter.js";
+import { GeminiSkillAdapter } from "./adapters/GeminiSkillAdapter.js";
 import { SyncEngine } from "./engine/SyncEngine.js";
 
 const engine = new SyncEngine([
@@ -11,6 +13,8 @@ const engine = new SyncEngine([
 	new ClaudeAgentAdapter(),
 	new ClaudeSkillAdapter(),
 	new GeminiMcpAdapter(),
+	new GeminiSkillAdapter(),
+	new GeminiAgentAdapter(),
 ]);
 
 async function main(): Promise<void> {
