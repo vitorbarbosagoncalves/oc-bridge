@@ -38,6 +38,9 @@
 			"@commitlint/config-conventional"
 		]
 	},
+	"overrides": {
+		"lodash-es": "4.17.21"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.10",
 		"@commitlint/cli": "^20.5.0",
