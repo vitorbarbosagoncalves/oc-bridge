@@ -6,22 +6,20 @@ on:
       - release
 
 permissions:
-  contents: read
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write # Required for NPM Trusted Publishing
 
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # create tags and GitHub releases
-      issues: write # comment on released issues
-      pull-requests: write # comment on released PRs
-      id-token: write # OIDC for npm provenance
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0 # full history for commit analysis
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -32,14 +30,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify dependency integrity
-        run: npm audit signatures
-
       - name: Build
         run: npm run build
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
         run: npx semantic-release
