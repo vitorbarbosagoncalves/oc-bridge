@@ -3,12 +3,14 @@ process.title = "opencode-relay";
 import { ClaudeAgentAdapter } from "./adapters/ClaudeAgentAdapter.js";
 import { ClaudeMcpAdapter } from "./adapters/ClaudeMcpAdapter.js";
 import { ClaudeSkillAdapter } from "./adapters/ClaudeSkillAdapter.js";
+import { GeminiMcpAdapter } from "./adapters/GeminiMcpAdapter.js";
 import { SyncEngine } from "./engine/SyncEngine.js";
 
 const engine = new SyncEngine([
 	new ClaudeMcpAdapter(),
 	new ClaudeAgentAdapter(),
 	new ClaudeSkillAdapter(),
+	new GeminiMcpAdapter(),
 ]);
 
 async function main(): Promise<void> {
