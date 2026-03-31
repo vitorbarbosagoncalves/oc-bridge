@@ -6,18 +6,19 @@ import { ClaudeSkillAdapter } from "./adapters/ClaudeSkillAdapter.js";
 import { GeminiAgentAdapter } from "./adapters/GeminiAgentAdapter.js";
 import { GeminiMcpAdapter } from "./adapters/GeminiMcpAdapter.js";
 import { GeminiSkillAdapter } from "./adapters/GeminiSkillAdapter.js";
+import { installDaemon, uninstallDaemon } from "./daemon.js";
 import { SyncEngine } from "./engine/SyncEngine.js";
 
-const engine = new SyncEngine([
-	new ClaudeMcpAdapter(),
-	new ClaudeAgentAdapter(),
-	new ClaudeSkillAdapter(),
-	new GeminiMcpAdapter(),
-	new GeminiSkillAdapter(),
-	new GeminiAgentAdapter(),
-]);
+async function runDaemon(): Promise<void> {
+	const engine = new SyncEngine([
+		new ClaudeMcpAdapter(),
+		new ClaudeAgentAdapter(),
+		new ClaudeSkillAdapter(),
+		new GeminiMcpAdapter(),
+		new GeminiSkillAdapter(),
+		new GeminiAgentAdapter(),
+	]);
 
-async function main(): Promise<void> {
 	console.info("[relay] Starting opencode-relay…");
 
 	for (const signal of ["SIGINT", "SIGTERM"] as const) {
@@ -35,6 +36,25 @@ async function main(): Promise<void> {
 
 	await engine.start();
 	console.info("[relay] Watching for changes. Press Ctrl+C to stop.");
+}
+
+async function main(): Promise<void> {
+	const [, , command, subcommand] = process.argv;
+
+	if (command === "daemon") {
+		if (subcommand === "install") {
+			installDaemon();
+			return;
+		}
+		if (subcommand === "uninstall") {
+			uninstallDaemon();
+			return;
+		}
+		console.error(`[relay] Unknown daemon subcommand: ${subcommand}`);
+		process.exit(1);
+	}
+
+	await runDaemon();
 }
 
 main().catch((err: unknown) => {
