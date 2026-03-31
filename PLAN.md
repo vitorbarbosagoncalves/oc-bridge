@@ -452,7 +452,8 @@ The only non-automatable concern: `description` quality (trigger hint vs. summar
 
 ### Phase 6: CLI Entry & Execution
 - [x] Create `index.ts` to wire up Engine and all Adapters
-- [x] Add npm scripts: `dev`, `build`, `start`
+- [x] Integrate daemon management (`install`, `uninstall`) into the main CLI
+- [x] Add npm scripts: `dev`, `build`, `start`, `install-daemon`, `uninstall-daemon`
 - [x] Test cross-platform compatibility
 
 ---

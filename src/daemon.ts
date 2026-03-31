@@ -1,24 +1,12 @@
-#!/usr/bin/env tsx
-/**
- * Install or uninstall opencode-relay as a background daemon.
- *
- * macOS  → launchd user agent  (~/.Library/LaunchAgents/)
- * Linux  → systemd user unit   (~/.config/systemd/user/)
- *
- * Usage:
- *   npm run install-daemon
- *   npm run uninstall-daemon
- */
-
 import { execFileSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = resolve(fileURLToPath(import.meta.url), "../..");
+const ROOT = resolve(fileURLToPath(import.meta.url), "..");
 const NODE = process.execPath;
-const ENTRY = join(ROOT, "dist/index.mjs");
+const ENTRY = join(ROOT, "index.mjs");
 const LABEL = "com.opencode-relay";
 const SERVICE = "opencode-relay";
 
@@ -78,11 +66,7 @@ function uninstallMacos(): void {
 // ── Linux systemd ─────────────────────────────────────────────────────────────
 
 function unitPath(): string {
-	return join(
-		homedir(),
-		".config/systemd/user",
-		`${SERVICE}.service`,
-	);
+	return join(homedir(), ".config/systemd/user", `${SERVICE}.service`);
 }
 
 function unitContent(): string {
@@ -123,25 +107,32 @@ function run(cmd: string, args: string[]): void {
 	execFileSync(cmd, args, { stdio: "inherit" });
 }
 
-function die(msg: string): never {
-	console.error(`[daemon] ${msg}`);
-	process.exit(1);
+// ── Public API ───────────────────────────────────────────────────────────────
+
+export function installDaemon(): void {
+	const { platform } = process;
+	if (platform === "darwin") {
+		installMacos();
+	} else if (platform === "linux") {
+		installLinux();
+	} else {
+		console.error(
+			`[daemon] Unsupported platform "${platform}". Only macOS and Linux are supported.`,
+		);
+		process.exit(1);
+	}
 }
 
-// ── Entry ─────────────────────────────────────────────────────────────────────
-
-const [, , command] = process.argv;
-
-if (command !== "install" && command !== "uninstall") {
-	die(`Unknown command "${command}". Use "install" or "uninstall".`);
-}
-
-const { platform } = process;
-
-if (platform === "darwin") {
-	command === "install" ? installMacos() : uninstallMacos();
-} else if (platform === "linux") {
-	command === "install" ? installLinux() : uninstallLinux();
-} else {
-	die(`Unsupported platform "${platform}". Only macOS and Linux are supported.`);
+export function uninstallDaemon(): void {
+	const { platform } = process;
+	if (platform === "darwin") {
+		uninstallMacos();
+	} else if (platform === "linux") {
+		uninstallLinux();
+	} else {
+		console.error(
+			`[daemon] Unsupported platform "${platform}". Only macOS and Linux are supported.`,
+		);
+		process.exit(1);
+	}
 }
