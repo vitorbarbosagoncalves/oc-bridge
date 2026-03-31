@@ -1,8 +1,8 @@
-# 🔄 OpenCode Sync
+# 🔄 ocsync
 
-OpenCode Sync is a lightweight background daemon that synchronizes your **OpenCode** configurations across multiple AI CLI tools, starting with **Claude Code**. 
+**ocsync** is a lightweight background daemon that synchronizes your **OpenCode** configurations across multiple AI CLI tools, starting with **Claude Code**. 
 
-It acts as a bridge, allowing you to maintain a single "source of truth" for your MCP servers, custom agents, and skills, while automatically translating and deploying them to provider-specific configuration files.
+It acts as a bidirectional bridge, allowing you to maintain a single "source of truth" for your MCP servers, custom agents, and skills, while automatically translating and deploying them to provider-specific configuration files.
 
 ## ✨ Features
 
@@ -25,14 +25,14 @@ It acts as a bridge, allowing you to maintain a single "source of truth" for you
 
 **Global Install (Recommended):**
 ```bash
-npm install -g opencode-sync
+npm install -g ocsync
 ```
 
 **From Source:**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/opencode-sync.git
-   cd opencode-sync
+   git clone https://github.com/your-username/ocsync.git
+   cd ocsync
    ```
 2. Install dependencies and build:
    ```bash
@@ -44,13 +44,13 @@ npm install -g opencode-sync
 
 ## 🛠️ Running as a Daemon
 
-OpenCode Sync includes a built-in installer to run as a background service.
+**ocsync** includes a built-in installer to run as a background service.
 
 ### Quick Install (Global)
 
 If you installed globally, simply run:
 ```bash
-opencode-sync daemon install
+ocsync daemon install
 ```
 
 ### Manual Install (From Source)
@@ -61,14 +61,14 @@ npm run install-daemon
 
 ### Platform Support
 
-- **macOS (launchd)**: Installs a User Launch Agent. Logs are in `~/Library/Logs/opencode-sync.log`.
-- **Linux (systemd)**: Installs a Systemd User Unit. Logs are in `journalctl --user -u opencode-sync -f`.
+- **macOS (launchd)**: Installs a User Launch Agent. Logs are in `~/Library/Logs/ocsync.log`.
+- **Linux (systemd)**: Installs a Systemd User Unit. Logs are in `journalctl --user -u ocsync -f`.
 
 ### Uninstallation
 
 To stop and remove the daemon:
 ```bash
-opencode-sync daemon uninstall
+ocsync daemon uninstall
 ```
 
 ---

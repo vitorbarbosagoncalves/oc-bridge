@@ -1,4 +1,4 @@
-process.title = "opencode-sync";
+process.title = "ocsync";
 
 import { ClaudeAgentAdapter } from "./adapters/ClaudeAgentAdapter.js";
 import { ClaudeMcpAdapter } from "./adapters/ClaudeMcpAdapter.js";
@@ -19,7 +19,7 @@ async function runDaemon(): Promise<void> {
 		new GeminiAgentAdapter(),
 	]);
 
-	console.info("[sync] Starting opencode-sync…");
+	console.info("[sync] Starting ocsync…");
 
 	for (const signal of ["SIGINT", "SIGTERM"] as const) {
 		process.on(signal, () => {
