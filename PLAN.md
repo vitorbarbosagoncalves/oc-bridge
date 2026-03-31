@@ -1,4 +1,4 @@
-# OpenCode Relay - Project Plan
+# OpenCode Bridge (oc-bridge) - Project Plan
 
 ## Overview
 

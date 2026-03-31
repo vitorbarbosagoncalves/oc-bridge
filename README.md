@@ -1,8 +1,8 @@
-# 🔄 OpenCode Relay
+# 🔄 oc-bridge
 
-OpenCode Relay is a lightweight background daemon that synchronizes your **OpenCode** configurations across multiple AI CLI tools, starting with **Claude Code**. 
+**oc-bridge** is a lightweight background daemon that synchronizes your **OpenCode** configurations across multiple AI CLI tools, starting with **Claude Code**. 
 
-It acts as a bridge, allowing you to maintain a single "source of truth" for your MCP servers, custom agents, and skills, while automatically translating and deploying them to provider-specific configuration files.
+It acts as a bidirectional bridge, allowing you to maintain a single "source of truth" for your MCP servers, custom agents, and skills, while automatically translating and deploying them to provider-specific configuration files.
 
 ## ✨ Features
 
@@ -25,14 +25,14 @@ It acts as a bridge, allowing you to maintain a single "source of truth" for you
 
 **Global Install (Recommended):**
 ```bash
-npm install -g opencode-relay
+npm install -g oc-bridge
 ```
 
 **From Source:**
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/opencode-relay.git
-   cd opencode-relay
+   git clone https://github.com/your-username/oc-bridge.git
+   cd oc-bridge
    ```
 2. Install dependencies and build:
    ```bash
@@ -44,13 +44,13 @@ npm install -g opencode-relay
 
 ## 🛠️ Running as a Daemon
 
-OpenCode Relay includes a built-in installer to run as a background service.
+**oc-bridge** includes a built-in installer to run as a background service.
 
 ### Quick Install (Global)
 
 If you installed globally, simply run:
 ```bash
-opencode-relay daemon install
+oc-bridge daemon install
 ```
 
 ### Manual Install (From Source)
@@ -61,14 +61,14 @@ npm run install-daemon
 
 ### Platform Support
 
-- **macOS (launchd)**: Installs a User Launch Agent. Logs are in `~/Library/Logs/opencode-relay.log`.
-- **Linux (systemd)**: Installs a Systemd User Unit. Logs are in `journalctl --user -u opencode-relay -f`.
+- **macOS (launchd)**: Installs a User Launch Agent. Logs are in `~/Library/Logs/oc-bridge.log`.
+- **Linux (systemd)**: Installs a Systemd User Unit. Logs are in `journalctl --user -u oc-bridge -f`.
 
 ### Uninstallation
 
 To stop and remove the daemon:
 ```bash
-opencode-relay daemon uninstall
+oc-bridge daemon uninstall
 ```
 
 ---
