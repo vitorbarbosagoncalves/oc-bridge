@@ -38,7 +38,7 @@
 		]
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.8",
+		"@biomejs/biome": "^2.4.10",
 		"@commitlint/cli": "^20.5.0",
 		"@commitlint/config-conventional": "^20.5.0",
 		"@semantic-release/changelog": "^6.0.3",
@@ -50,7 +50,7 @@
 		"tsdown": "^0.21.4",
 		"tsx": "^4.21.0",
 		"typescript": "^5.9.3",
-		"vitest": "^4.1.0"
+		"vitest": "^4.1.2"
 	},
 	"dependencies": {
 		"chokidar": "^5.0.0",
