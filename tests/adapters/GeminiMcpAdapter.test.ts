@@ -288,7 +288,7 @@ describe(GeminiMcpAdapter, () => {
 			mcp: { mytool: { type: "local" as const, command: ["npx", "-y", "x"] } },
 		};
 		const result = adapter.transform(source, {});
-		const server = result.mcpServers?.["mytool"];
+		const server = result.mcpServers?.mytool;
 		expect(server).toBeDefined();
 		expect(server).not.toHaveProperty("type");
 		expect(server).toMatchObject({ command: "npx", args: ["-y", "x"] });
@@ -301,7 +301,7 @@ describe(GeminiMcpAdapter, () => {
 			},
 		};
 		const result = adapter.transform(source, {});
-		expect(result.mcpServers?.["remote"]).toEqual({
+		expect(result.mcpServers?.remote).toEqual({
 			url: "https://example.com/sse",
 		});
 	});
