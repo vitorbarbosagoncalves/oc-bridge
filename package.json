@@ -1,6 +1,6 @@
 {
-	"name": "ocsync",
-	"version": "1.0.3",
+	"name": "oc-bridge",
+	"version": "1.0.4",
 	"description": "Automatically relay OpenCode configurations to Claude Code and other AI agents.",
 	"keywords": [
 		"opencode",
@@ -16,7 +16,7 @@
 	"type": "module",
 	"main": "dist/index.mjs",
 	"bin": {
-		"ocsync": "dist/index.mjs"
+		"oc-bridge": "dist/index.mjs"
 	},
 	"scripts": {
 		"build": "tsdown",
@@ -25,7 +25,7 @@
 		"test": "vitest run",
 		"install-daemon": "node dist/index.mjs daemon install",
 		"uninstall-daemon": "node dist/index.mjs daemon uninstall",
-		"postinstall": "node -e \"if(process.env.npm_config_global){console.log('\\x1b[32m%s\\x1b[0m', 'OpenCode Sync installed! To run it in the background as a system service, run:');console.log('\\x1b[33m%s\\x1b[0m', '  ocsync daemon install');}\"",
+		"postinstall": "node -e \"if(process.env.npm_config_global){console.log('\\x1b[32m%s\\x1b[0m', 'OpenCode Bridge installed! To run it in the background as a system service, run:');console.log('\\x1b[33m%s\\x1b[0m', '  oc-bridge daemon install');}\"",
 		"prepare": "husky || true"
 	},
 

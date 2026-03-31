@@ -70,7 +70,7 @@ describe(loadEnvFile, () => {
 	const TEST_KEY2 = "RELAY_TEST_LOAD_KEY2_XYZ";
 
 	beforeEach(() => {
-		tmpFile = join(tmpdir(), `ocsync-env-test-${Date.now()}.env`);
+		tmpFile = join(tmpdir(), `oc-bridge-env-test-${Date.now()}.env`);
 		delete process.env[TEST_KEY];
 		delete process.env[TEST_KEY2];
 	});

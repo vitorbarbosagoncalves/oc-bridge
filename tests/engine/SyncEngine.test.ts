@@ -11,7 +11,7 @@ describe(readConfig, () => {
 	let tmpFile: string;
 
 	beforeEach(() => {
-		tmpFile = join(tmpdir(), `ocsync-test-${Date.now()}.jsonc`);
+		tmpFile = join(tmpdir(), `oc-bridge-test-${Date.now()}.jsonc`);
 	});
 
 	it("parses a valid JSONC file", async () => {
@@ -57,7 +57,7 @@ describe(SyncEngine, () => {
 	const NO_ENV_FILE = "/tmp/__missing_env_file_xyz__.env";
 
 	beforeEach(async () => {
-		tmpConfig = join(tmpdir(), `ocsync-engine-test-${Date.now()}.jsonc`);
+		tmpConfig = join(tmpdir(), `oc-bridge-engine-test-${Date.now()}.jsonc`);
 		await writeFile(tmpConfig, '{"mcp": {}}', "utf8");
 	});
 
@@ -115,7 +115,7 @@ describe(SyncEngine, () => {
 
 	it("loads env vars from env file before syncing adapters", async () => {
 		const TEST_KEY = "RELAY_ENGINE_TEST_ENV_KEY_XYZ";
-		const tmpEnv = join(tmpdir(), `ocsync-engine-env-${Date.now()}.env`);
+		const tmpEnv = join(tmpdir(), `oc-bridge-engine-env-${Date.now()}.env`);
 		await writeFile(tmpEnv, `${TEST_KEY}=from_env_file`, "utf8");
 
 		let capturedEnv: string | undefined;

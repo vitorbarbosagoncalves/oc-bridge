@@ -10,7 +10,7 @@
 
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
-Instead, report them via [GitHub's private vulnerability reporting](https://github.com/vitorbarbosagoncalves/ocsync/security/advisories/new).
+Instead, report them via [GitHub's private vulnerability reporting](https://github.com/vitorbarbosagoncalves/oc-bridge/security/advisories/new).
 
 You can expect:
 - **Acknowledgement** within 48 hours

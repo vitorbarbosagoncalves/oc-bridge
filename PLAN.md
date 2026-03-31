@@ -1,4 +1,4 @@
-# OpenCode Sync (ocsync) - Project Plan
+# OpenCode Bridge (oc-bridge) - Project Plan
 
 ## Overview
 

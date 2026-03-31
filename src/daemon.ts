@@ -7,8 +7,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(fileURLToPath(import.meta.url), "..");
 const NODE = process.execPath;
 const ENTRY = join(ROOT, "index.mjs");
-const LABEL = "com.ocsync";
-const SERVICE = "ocsync";
+const LABEL = "com.oc-bridge";
+const SERVICE = "oc-bridge";
 
 // ── macOS launchd ─────────────────────────────────────────────────────────────
 
