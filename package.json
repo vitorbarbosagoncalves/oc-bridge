@@ -1,6 +1,6 @@
 {
 	"name": "oc-bridge",
-	"version": "1.0.4",
+	"version": "1.0.0",
 	"description": "Automatically relay OpenCode configurations to Claude Code and other AI agents.",
 	"keywords": [
 		"opencode",
