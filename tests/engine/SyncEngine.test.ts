@@ -11,7 +11,7 @@ describe(readConfig, () => {
 	let tmpFile: string;
 
 	beforeEach(() => {
-		tmpFile = join(tmpdir(), `opencode-relay-test-${Date.now()}.jsonc`);
+		tmpFile = join(tmpdir(), `opencode-sync-test-${Date.now()}.jsonc`);
 	});
 
 	it("parses a valid JSONC file", async () => {
@@ -57,10 +57,7 @@ describe(SyncEngine, () => {
 	const NO_ENV_FILE = "/tmp/__missing_env_file_xyz__.env";
 
 	beforeEach(async () => {
-		tmpConfig = join(
-			tmpdir(),
-			`opencode-relay-engine-test-${Date.now()}.jsonc`,
-		);
+		tmpConfig = join(tmpdir(), `opencode-sync-engine-test-${Date.now()}.jsonc`);
 		await writeFile(tmpConfig, '{"mcp": {}}', "utf8");
 	});
 
@@ -118,10 +115,7 @@ describe(SyncEngine, () => {
 
 	it("loads env vars from env file before syncing adapters", async () => {
 		const TEST_KEY = "RELAY_ENGINE_TEST_ENV_KEY_XYZ";
-		const tmpEnv = join(
-			tmpdir(),
-			`opencode-relay-engine-env-${Date.now()}.env`,
-		);
+		const tmpEnv = join(tmpdir(), `opencode-sync-engine-env-${Date.now()}.env`);
 		await writeFile(tmpEnv, `${TEST_KEY}=from_env_file`, "utf8");
 
 		let capturedEnv: string | undefined;

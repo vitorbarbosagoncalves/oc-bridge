@@ -7,8 +7,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(fileURLToPath(import.meta.url), "..");
 const NODE = process.execPath;
 const ENTRY = join(ROOT, "index.mjs");
-const LABEL = "com.opencode-relay";
-const SERVICE = "opencode-relay";
+const LABEL = "com.opencode-sync";
+const SERVICE = "opencode-sync";
 
 // ── macOS launchd ─────────────────────────────────────────────────────────────
 

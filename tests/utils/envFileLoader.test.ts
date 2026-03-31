@@ -70,7 +70,7 @@ describe(loadEnvFile, () => {
 	const TEST_KEY2 = "RELAY_TEST_LOAD_KEY2_XYZ";
 
 	beforeEach(() => {
-		tmpFile = join(tmpdir(), `opencode-relay-env-test-${Date.now()}.env`);
+		tmpFile = join(tmpdir(), `opencode-sync-env-test-${Date.now()}.env`);
 		delete process.env[TEST_KEY];
 		delete process.env[TEST_KEY2];
 	});

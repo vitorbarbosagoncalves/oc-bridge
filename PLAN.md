@@ -1,4 +1,4 @@
-# OpenCode Relay - Project Plan
+# OpenCode Sync - Project Plan
 
 ## Overview
 
