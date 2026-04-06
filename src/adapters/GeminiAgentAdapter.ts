@@ -108,7 +108,9 @@ export function buildGeminiAgentFrontmatter(
 
 	const description = source.description ?? "";
 	if (!source.description) {
-		warnings.push(`Agent "${name}" has no description — using empty string`);
+		warnings.push(
+			`Agent "${name}" has no description — Gemini requires a non-empty description or it will reject this agent file`,
+		);
 	}
 
 	// Detect non-trivial tools restriction and warn, then omit.
@@ -150,6 +152,24 @@ export function renderGeminiAgentMd(
 	body: string,
 ): string {
 	return `---\n${serializeFrontmatter(frontmatter)}\n---\n\n${body.trim()}\n`;
+}
+
+/**
+ * Detect `${varName}` template expressions in an agent body.
+ * Gemini CLI treats these as required input parameters even inside code blocks.
+ * Returns deduplicated variable names found.
+ */
+export function detectGeminiTemplateVars(body: string): string[] {
+	const matches = [...body.matchAll(/\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g)];
+	return [...new Set(matches.map((m) => m[1]))];
+}
+
+/**
+ * Escape `${varName}` expressions in a body string so Gemini CLI does not
+ * treat them as required template inputs.
+ */
+export function escapeGeminiTemplateVars(body: string): string {
+	return body.replace(/\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}/g, "\\${$1}");
 }
 
 // ── Per-agent async transforms ────────────────────────────────────────────────
@@ -194,6 +214,14 @@ async function processJsonAgent(
 		},
 	);
 
+	const templateVars = detectGeminiTemplateVars(body);
+	if (templateVars.length > 0) {
+		warnings.push(
+			`Agent body contains \${…} expressions (${templateVars.join(", ")}) — escaping for Gemini CLI (known Gemini CLI limitation)`,
+		);
+		body = escapeGeminiTemplateVars(body);
+	}
+
 	return {
 		name,
 		content: renderGeminiAgentMd(frontmatter, body),
@@ -209,7 +237,8 @@ async function processMdAgent(
 	content: string;
 	warnings: string[];
 }> {
-	const { frontmatter: sourceFm, body } = parseFrontmatter(sourceContent);
+	const { frontmatter: sourceFm, body: rawBody } =
+		parseFrontmatter(sourceContent);
 	const name = toKebabCase((sourceFm.name as string | undefined) ?? rawName);
 
 	const { frontmatter, warnings } = buildGeminiAgentFrontmatter(name, {
@@ -218,6 +247,15 @@ async function processMdAgent(
 		tools: sourceFm.tools as Record<string, boolean> | undefined,
 		temperature: sourceFm.temperature as number | undefined,
 	});
+
+	const templateVars = detectGeminiTemplateVars(rawBody);
+	if (templateVars.length > 0) {
+		warnings.push(
+			`Agent body contains \${…} expressions (${templateVars.join(", ")}) — escaping for Gemini CLI (known Gemini CLI limitation)`,
+		);
+	}
+	const body =
+		templateVars.length > 0 ? escapeGeminiTemplateVars(rawBody) : rawBody;
 
 	return { name, content: renderGeminiAgentMd(frontmatter, body), warnings };
 }

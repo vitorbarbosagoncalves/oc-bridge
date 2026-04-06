@@ -53,6 +53,18 @@ describe(toKebabCase, () => {
 	it("collapses repeated separators from mixed underscores and spaces", () => {
 		expect(toKebabCase("code__review  tool")).toBe("code-review-tool");
 	});
+
+	it("handles space-separated acronym", () => {
+		expect(toKebabCase("API Tester")).toBe("api-tester");
+	});
+
+	it("handles camelCase acronym", () => {
+		expect(toKebabCase("APITester")).toBe("api-tester");
+	});
+
+	it("handles leading acronym followed by word", () => {
+		expect(toKebabCase("HTMLParser")).toBe("html-parser");
+	});
 });
 
 // ── mapModel ──────────────────────────────────────────────────────────────────

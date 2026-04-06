@@ -61,7 +61,8 @@ const CLAUDE_ONLY_KEYS = new Set([
  */
 export function toKebabCase(name: string): string {
 	return name
-		.replace(/([A-Z])/g, (c) => `-${c.toLowerCase()}`)
+		.replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+		.replace(/([a-z\d])([A-Z])/g, "$1-$2")
 		.replace(/[\s_]+/g, "-")
 		.replace(/-+/g, "-")
 		.replace(/^-/, "")
@@ -249,7 +250,9 @@ export function buildFrontmatter(
 
 	const description = source.description ?? "";
 	if (!source.description) {
-		warnings.push(`Agent "${name}" has no description — using empty string`);
+		warnings.push(
+			`Agent "${name}" has no description — Claude Code requires a non-empty description or it will reject this agent file`,
+		);
 	}
 
 	if (source.temperature !== undefined) {

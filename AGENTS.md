@@ -67,10 +67,11 @@ Pure file copy — formats are compatible. OpenCode extras (`license`, `compatib
 1. **JSONC**: source is `opencode.jsonc` not `.json` — always use `jsonc-parser`
 2. **`{env:VAR}` templates**: present in MCP values/headers — resolve at sync time; log warn if undefined
 3. **`temperature` in OpenCode agents**: valid in OpenCode, **crashes Claude** — must be dropped
-4. **`description` required**: Claude Code agents require `description`; OpenCode makes it optional — write `""` + warn rather than omit
+4. **`description` required**: Claude Code and Gemini both require a non-empty `description`; OpenCode makes it optional — write `""` + warn rather than omit, but the warning must be explicit: `"Claude Code requires a non-empty description or it will reject this agent file"`. The agent is still written so the user can see and fix it.
 5. **Two agent sources**: both `opencode.jsonc` (`agent` key) and `~/.config/opencode/agents/*.md` must be watched
 6. **`mode: "subagent"` is still an agent**: goes to `~/.claude/agents/` like any other agent — `~/.claude/skills/` is for user-invocable slash commands, a different concept
 7. **Shared skills dir**: `~/.claude/skills/` is scanned by both tools natively — never use it as a sync *source* or you'll create circular updates
 8. **Home dir**: always use `pathResolver.resolveHome()`, never assume `~` expansion
 9. **Non-destructive merge**: read target file first, spread only the synced keys, preserve Claude-specific fields (`skills`, `permissionMode`, etc.)
 10. **Deletion tracking**: removing an agent/skill from OpenCode must delete the corresponding Claude file — track what was last synced
+11. **Gemini `${…}` template collision**: Gemini CLI treats `${identifier}` anywhere in an agent body (including inside fenced code blocks) as a required template input — even when it's just JavaScript template literal syntax inside a code example. OpenCode has no agent-level template var system, so there is nothing to convert. The relay detects this pattern and warns: `Agent body contains ${…} expressions (var1, var2) — Gemini CLI may treat these as required template inputs (known Gemini CLI limitation)`. No content transformation is done.
