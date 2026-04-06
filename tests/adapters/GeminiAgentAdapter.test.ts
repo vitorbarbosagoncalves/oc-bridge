@@ -15,6 +15,8 @@ import { readdir, readFile, rm, writeFile } from "node:fs/promises";
 import {
 	buildGeminiAgentFrontmatter,
 	clampTemperature,
+	detectGeminiTemplateVars,
+	escapeGeminiTemplateVars,
 	GeminiAgentAdapter,
 	mapGeminiModel,
 	renderGeminiAgentMd,
@@ -293,5 +295,133 @@ describe(GeminiAgentAdapter, () => {
 			expect.stringMatching(/my-agent\.md$/),
 			expect.anything(),
 		);
+	});
+
+	it("routes space-separated acronym MD agent to api-tester.md", async () => {
+		vi.mocked(readdir).mockResolvedValue(["api-tester.md"] as never);
+		vi.mocked(readFile).mockImplementation(async (path) => {
+			if (String(path).endsWith("api-tester.md")) {
+				return "---\nname: API Tester\ndescription: Tests APIs\n---\nbody";
+			}
+			throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
+		});
+
+		const adapter = new GeminiAgentAdapter();
+		await adapter.sync({} as never);
+
+		const writtenPaths = vi
+			.mocked(writeFile)
+			.mock.calls.map((c) => String(c[0]));
+		expect(writtenPaths.some((p) => p.match(/agents\/api-tester\.md$/))).toBe(
+			true,
+		);
+	});
+
+	it("writes agent with missing description and emits warning", async () => {
+		vi.mocked(readdir).mockResolvedValue([] as never);
+		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+		const adapter = new GeminiAgentAdapter();
+		await adapter.sync({
+			agent: { no_desc: {} },
+		} as never);
+
+		const writtenPaths = vi
+			.mocked(writeFile)
+			.mock.calls.map((c) => String(c[0]));
+		expect(writtenPaths.some((p) => p.match(/agents\/no-desc\.md$/))).toBe(
+			true,
+		);
+		expect(
+			warnSpy.mock.calls.some((args) =>
+				String(args[0]).includes("no description"),
+			),
+		).toBe(true);
+
+		warnSpy.mockRestore();
+	});
+
+	it("escapes ${…} template expressions in MD agent body and warns", async () => {
+		vi.mocked(readdir).mockResolvedValue(["my-agent.md"] as never);
+		vi.mocked(readFile).mockImplementation(async (path) => {
+			if (String(path).endsWith("my-agent.md")) {
+				return "---\nname: my-agent\ndescription: x\n---\nfetch(`${baseURL}/api`)";
+			}
+			throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
+		});
+		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+		const adapter = new GeminiAgentAdapter();
+		await adapter.sync({} as never);
+
+		expect(
+			warnSpy.mock.calls.some((args) => String(args[0]).includes("baseURL")),
+		).toBe(true);
+
+		const writtenContent = String(
+			vi
+				.mocked(writeFile)
+				.mock.calls.find((c) => String(c[0]).endsWith("my-agent.md"))?.[1],
+		);
+		expect(writtenContent).toContain("\\${baseURL}");
+		expect(writtenContent).not.toMatch(/(?<!\\)\$\{baseURL\}/);
+
+		warnSpy.mockRestore();
+	});
+});
+
+// ── detectGeminiTemplateVars ──────────────────────────────────────────────────
+
+describe(detectGeminiTemplateVars, () => {
+	it("returns empty array when no template vars present", () => {
+		expect(detectGeminiTemplateVars("hello world")).toEqual([]);
+	});
+
+	it("detects a single template var", () => {
+		expect(detectGeminiTemplateVars("fetch(`${baseURL}/api`)")).toEqual([
+			"baseURL",
+		]);
+	});
+
+	it("detects multiple distinct template vars", () => {
+		expect(
+			detectGeminiTemplateVars(
+				"fetch(`${baseURL}`, { headers: { auth: ${authToken} } })",
+			),
+		).toEqual(["baseURL", "authToken"]);
+	});
+
+	it("deduplicates repeated vars", () => {
+		expect(detectGeminiTemplateVars("${foo} and ${foo} again")).toEqual([
+			"foo",
+		]);
+	});
+
+	it("ignores vars starting with a digit", () => {
+		expect(detectGeminiTemplateVars("${1foo}")).toEqual([]);
+	});
+});
+
+// ── escapeGeminiTemplateVars ──────────────────────────────────────────────────
+
+describe(escapeGeminiTemplateVars, () => {
+	it("escapes a single template var", () => {
+		expect(escapeGeminiTemplateVars("fetch(`${baseURL}/api`)")).toBe(
+			"fetch(`\\${baseURL}/api`)",
+		);
+	});
+
+	it("escapes multiple distinct vars", () => {
+		expect(escapeGeminiTemplateVars("`${baseURL}` and `${authToken}`")).toBe(
+			"`\\${baseURL}` and `\\${authToken}`",
+		);
+	});
+
+	it("returns body unchanged when no vars present", () => {
+		expect(escapeGeminiTemplateVars("no vars here")).toBe("no vars here");
+	});
+
+	it("escapes vars with underscores", () => {
+		expect(escapeGeminiTemplateVars("${my_var}")).toBe("\\${my_var}");
 	});
 });
